@@ -8,11 +8,12 @@ import GeoService from './services/geo';
 
 function App() {
   const [ ipInfo, setIpinfo] = useState('')
+  const [ marker, setMarker] = useState(null)
   async function searchIP(IP) {
     try {
-      setIpinfo(IP)
       const res = await GeoService.getIPInfo(IP)
-      console.log(res)
+      setIpinfo(res.data)
+      setMarker([res.data.location.lat, res.data.location.lng])
     } catch (error) {
       console.log(error)
     }
@@ -27,7 +28,7 @@ function App() {
         </div>
         { ipInfo && <IPInfo info={ipInfo} /> }
       </div>
-      <Map />
+      <Map marker={marker} />
     </div>
   );
 }
