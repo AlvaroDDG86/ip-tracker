@@ -9,14 +9,22 @@ import GeoService from './services/geo';
 function App() {
   const [ ipInfo, setIpinfo] = useState('')
   const [ marker, setMarker] = useState(null)
+  const [ errorMsg, setErrorMsg ] = useState()
   async function searchIP(IP) {
     try {
       const res = await GeoService.getIPInfo(IP)
       setIpinfo(res.data)
       setMarker([res.data.location.lat, res.data.location.lng])
+      setErrorMsg(null)
     } catch (error) {
       console.log(error)
     }
+  }
+
+  function onSearchError(msg) {
+    setIpinfo(null)
+    setMarker(null)
+    setErrorMsg(msg)
   }
 
   return (
@@ -24,7 +32,10 @@ function App() {
       <div className="z-20 flex justify-center relative px-4 pt-8 pb-32 bg-cover bg-center"  style={{ backgroundImage: `url(${background})` }}>
         <div className="w-full max-w-screen-sm">
           <h1 className="text-center text-white text-3xl pb-4">React IP Tracker</h1>
-          <Search onSearch={searchIP} />
+          <Search onSearch={searchIP} onSearchError={onSearchError}/>
+          { errorMsg && (
+            <div className="bg-red-100 text-red-900 mt-2 rounded p-2 text-center text-xs font-bold uppercase">{ errorMsg }</div>
+          ) }
         </div>
         { ipInfo && <IPInfo info={ipInfo} /> }
       </div>
