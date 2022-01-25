@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import background from "./assets/images/bg.svg";
 import IPInfo from "./components/IPInfo";
 import Search from "./components/Search";
@@ -12,6 +12,11 @@ function App() {
   const [marker, setMarker] = useState(null);
   const [errorMsg, setErrorMsg] = useState();
   const [ isSearching, setIsSearching ] = useState(false)
+
+  useEffect(() => {
+    searchIP('')
+  }, [])
+
   async function searchIP(IP) {
     try {
       setIsSearching(true)
